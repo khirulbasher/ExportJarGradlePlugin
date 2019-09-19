@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<plugin>
+    import com.lemon.framework.gradleplugin.task.Executable
+
+    buildscript {
+        repositories {
+        mavenLocal()
+        mavenCentral()
+
+        dependencies {
+            classpath 'com.lemon.framework:gradle-plugin:1.0.0'
+        }
+    }
+
+    apply plugin: ....
+    apply plugin: Executable
+
+    version "1.0"
+
+    sourceSets {
+    main {
+        ...
+    }
+
+    test {
+        ...
+    }
+
+    compileJava {
+      ...
+    }
+
+    repositories {
+        ...
+    }
+
+
+    dependencies {
+        ....
+    }
+
+    jar {
+        exclude exportJar.exclude
+        manifest {
+            attributes('Main-Class':'com.lemon.sqlextractor.Application')
+            attributes('Class-Path':exportJar.dependencies())
+        }
+    }
+
+    <A-Multi-project-example>
+        <build-script>
+            import com.lemon.framework.gradleplugin.task.Executable
+
+            buildscript {
+
+                ext {
+                    frameworkVersion='1.0.5'
+                }
+
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
+                    flatDir {
+                        dirs 'libs'
+                    }
+                }
+
+                dependencies {
+                    classpath "com.lemon.framework:gradle-plugin:$frameworkVersion"
+                }
+            }
+
+            subprojects {
+
+                apply plugin: 'java'
+                apply plugin: 'maven'
+                apply plugin: 'idea'
+                apply plugin: Executable
+
+                version "1.0"
+
+                sourceSets {
+                    main {
+                        java.srcDir 'src/main/java'
+                        output.resourcesDir 'build/classes/java/main'
+                    }
+
+                    test {
+                        java.srcDir 'src/test/java'
+                        output.resourcesDir 'build/classes/java/main'
+                    }
+                }
+
+                compileJava {
+                    sourceCompatibility "1.8"
+                    targetCompatibility "1.8"
+                }
+
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
+                    flatDir {
+                        dirs 'libs'
+                    }
+                }
+                exportJar {
+                    exportLocation="export/$project.name"
+                    dependencyLocation='lib'
+                }
+
+                dependencies {
+                    testCompile 'junit:junit:4.12'
+                }
+            }
+        </build-script>
+
+        <sub-project>
+            dependencies {
+                implementation ("com.lemon.framework:transmit:$frameworkVersion") {
+                    exclude module:'reflex' //cause Same Group
+                    exclude module:'base'
+                    exclude group:'com.squareup.retrofit2', module:'retrofit'
+                    exclude group:'com.squareup.retrofit2', module:'converter-gson'
+                    exclude group:'com.squareup.retrofit2', module:'converter-gson'
+                    exclude group:'javax.validation', module:'validation-api'
+                }
+                implementation ("com.lemon.framework:core:$frameworkVersion") {
+                    exclude module:'reflex'
+                    exclude module:'base'
+                    exclude group:'javax.validation', module:'validation-api'
+                }
+            }
+
+            jar {
+                exclude exportJar.exclude
+                manifest {
+                    attributes('Main-Class':'com.lemon.tcpserver.Application')
+                    attributes('Class-Path':exportJar.dependencies())
+                }
+            }
+        </sub-project>
+    </A-Multi-project-example>
+
+</plugin>
+

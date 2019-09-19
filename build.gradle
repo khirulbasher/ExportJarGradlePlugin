@@ -1,0 +1,45 @@
+	apply plugin: "idea"
+    apply plugin: "java"
+    apply plugin: "maven"
+    apply plugin: 'maven-publish'
+   
+    group 'com.lemon.framework'
+    version = '1.0.8'
+    
+
+    sourceSets {
+        main{
+            java{
+                srcDir "src/main/java"
+            }
+            output.resourcesDir 'build/classes/java/main'
+        }
+
+        test{
+            java{
+                srcDir "src/test/java"
+            }
+            output.resourcesDir 'build/classes/java/test'
+        }
+    }
+
+    compileJava {
+        sourceCompatibility "1.8"
+        targetCompatibility "1.8"
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+        flatDir {
+            dirs 'lib'
+        }
+    }
+
+	dependencies {
+		implementation gradleApi()
+		implementation 'log4j:log4j:1.2.17'
+
+		testImplementation 'junit:junit:4.12'
+	}
