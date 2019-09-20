@@ -24,10 +24,6 @@ import com.lemon.framework.gradleplugin.task.Executable
 
 buildscript {
 
-    ext {
-        frameworkVersion='1.0.6-alpha'
-    }
-
     repositories {
         mavenLocal()
         mavenCentral()
